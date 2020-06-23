@@ -2,11 +2,6 @@ const username = document.getElementById("username");
 const saveScoreBtn = document.getElementById("saveScoreBtn");
 const finalScore = document.getElementById("finalScore");
 const mostRecentScore = localStorage.getItem("mostRecentScore");
-
-const highScores = JSON.parse(localStorage.getItem("highScores")) || [];
-
-const MAX_HIGH_SCORES = 5;
-
 finalScore.innerText = mostRecentScore;
 
 username.addEventListener("keyup", () => {
@@ -16,14 +11,28 @@ username.addEventListener("keyup", () => {
 saveHighScore = (e) => {
   e.preventDefault();
 
-  const score = {
-    score: mostRecentScore,
-    name: username.value,
-  };
-  highScores.push(score);
-  highScores.sort((a, b) => b.score - a.score);
-  highScores.splice(5);
+  const score = mostRecentScore;
+  const user = username.value;
+  console.log(mostRecentScore);
+  console.log(username.value);
 
-  localStorage.setItem("highScores", JSON.stringify(highScores));
-  window.location.assign("/");
+  if (user !== "") {
+    let highscores =
+      JSON.parse(window.localStorage.getItem("highScores")) || [];
+    console.log("w/0 parse", window.localStorage.getItem("highScores"));
+
+    console.log("w/ parse", highscores);
+
+    let newScore = {
+      score: score,
+      userInitials: user,
+    };
+
+    highscores.push(newScore);
+    console.log("new arr", highscores);
+
+    window.localStorage.setItem("highScores", JSON.stringify(highscores));
+  } else {
+    alert("Please fill in username");
+  }
 };

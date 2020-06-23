@@ -3,7 +3,7 @@ const choices = Array.from(document.getElementsByClassName("choice-text"));
 const progressText = document.getElementById("progressText");
 const scoreText = document.getElementById("score");
 const progressBarFull = document.getElementById("progressBarFull");
-var timeLeft = document.getElementById("countDownTimer");
+var timerId;
 
 let currentQuestion = {};
 let acceptingAnswers = false;
@@ -45,27 +45,29 @@ const MAX_QUESTIONS = 3;
 
 // Timer
 
-// let timeLeft = 30;
-// let coun
-// setInterval(timeReduce(){
-//   console.log(timeLeft);
-//   timeLeft--
-//   if (timeLeft === 0){
-//     console.log("game over, loser");
-//   }
-// }, 1000);
-
-// var myVar = setInterval(myTimer, 1000);
+var timer = 21;
 
 startGame = () => {
+  timerId = setInterval(clockTick, 1000);
+
   questionCounter = 0;
   score = 0;
   availableQuesions = [...questions];
   getNewQuestion();
 };
+clockTick = () => {
+  timer--;
+  console.log(timer);
+  document.getElementById("timeLeft").textContent = timer;
+  if (timer <= 0) {
+    console.log("end game");
+    endGame();
+  }
+};
 
 getNewQuestion = () => {
-  if (availableQuesions.length === 0 || questionCounter >= MAX_QUESTIONS) {
+  if (availableQuesions.length === 0) {
+    clearInterval(timerId);
     localStorage.setItem("mostRecentScore", score);
     //go to the end page
     return window.location.assign("/end.html");
@@ -101,6 +103,10 @@ choices.forEach((choice) => {
 
     if (classToApply === "correct") {
       incrementScore(CORRECT_BONUS);
+    } else {
+      timer -= 5;
+      console.log(timer);
+      document.getElementById("timeLeft").textContent = timer;
     }
 
     selectedChoice.parentElement.classList.add(classToApply);
@@ -115,6 +121,12 @@ choices.forEach((choice) => {
 incrementScore = (num) => {
   score += num;
   scoreText.innerText = score;
+};
+endGame = () => {
+  clearInterval(timerId);
+  localStorage.setItem("mostRecentScore", score);
+  console.log(score);
+  window.location.assign("/end.html");
 };
 
 startGame();
