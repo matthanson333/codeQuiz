@@ -126,7 +126,7 @@ endGame = () => {
   clearInterval(timerId);
   localStorage.setItem("mostRecentScore", score);
   console.log(score);
-  window.location.assign("/end.html");
+  window.location.assign("./end.html");
 };
 
 startGame();
